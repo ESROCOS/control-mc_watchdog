@@ -1,0 +1,464 @@
+//-------------------------------------
+// TASTE to BIP model transformation 
+// UGA/Verimag and Ellidiss Technologies 
+// ESROCOS/ERGO projects - April 2018  - v.0.9
+//-------------------------------------
+
+@cpp(src="ext-cpp/ExternInterfaceViewFcns.cpp",include="ExternInterfaceViewFcns.hpp")
+package InterfaceViewFull
+
+  const data bool TRUE = true
+  const data bool FALSE = false
+
+  // Extern declarations
+  extern data type asn1SccBase_Angle 
+  extern function const float get_rad(const asn1SccBase_Angle)
+  extern function set_rad(asn1SccBase_Angle, const float)
+
+  extern data type asn1SccBase_commands_Motion2D
+  extern function const float get_translation(const asn1SccBase_commands_Motion2D)
+  extern function set_translation (asn1SccBase_commands_Motion2D, const float)
+  extern function const float get_rotation(const asn1SccBase_commands_Motion2D)
+  extern function set_rotation(asn1SccBase_commands_Motion2D, const float)
+  extern function const float get_heading(const asn1SccBase_commands_Motion2D)
+  extern function set_heading(asn1SccBase_commands_Motion2D, const float)
+
+  extern data type queueBase_commands_Motion2D
+  extern function int get_size(const queueBase_commands_Motion2D)
+  extern function push_back(queueBase_commands_Motion2D, asn1SccBase_commands_Motion2D, int)
+  extern function asn1SccBase_commands_Motion2D pop_front(queueBase_commands_Motion2D)
+ 
+  extern function write(const bool)
+  extern function writeln(const bool)
+  extern function write(const int)
+  extern function writeln(const int)
+  extern function write(const float)
+  extern function writeln(const float)
+  extern function write(const string)
+  extern function writeln(const string)
+
+  // Port types
+  port type Port()
+
+  port type portBase_commands_Motion2D(asn1SccBase_commands_Motion2D v)
+  port type queuePortBase_commands_Motion2D(queueBase_commands_Motion2D q)
+
+  // Connector types
+  connector type Sync(Port s, Port r)
+    define s r
+  end
+
+  connector type SendRecBase_commands_Motion2D(portBase_commands_Motion2D s, portBase_commands_Motion2D r)
+    define s r
+    on s r
+      down { r.v = s.v; }
+  end
+
+  connector type SendRecQueueBase_commands_Motion2D(queuePortBase_commands_Motion2D s, portBase_commands_Motion2D r)
+    define s r
+    on s r
+      down { r.v = pop_front(s.q); }
+  end
+
+  // Generic TASTE cyclic interface type
+  atom type TASTE_PI_Cyclic(int period, int deadline)
+    clock t unit millisecond
+
+    export port Port sig_out()
+    export port Port sig_return()
+
+    place l0, l1, l2
+
+    initial to l0
+
+    on sig_out
+      from l0 to l1
+      eager
+      do { t = 0; }
+
+    on sig_return
+      from l1 to l2
+      eager
+
+    on sig_out
+      from l2 to l1
+      provided (t == period)
+      do { t = 0; }
+
+    invariant inv1 at l1 provided (t <= deadline)
+    invariant inv2 at l2 provided (t <= period)
+  end
+
+  // Generic TASTE sporadic interfaces
+  // Sporadic interface type with parameter of Base_commands_Motion2D type
+  atom type TASTE_PI_Sporadic_Base_commands_Motion2D(int miat, int deadline, int size)
+    clock t unit millisecond
+    data asn1SccBase_commands_Motion2D val
+    data queueBase_commands_Motion2D q
+
+    export port portBase_commands_Motion2D sig_out(val)
+    export port Port sig_return()
+    export port queuePortBase_commands_Motion2D sig_in(q)
+
+    port Port silent()
+
+    place l0, l1, l2
+
+    initial to l0
+      do { }
+
+    on sig_in
+      from l0 to l1
+      provided(get_size(q)>0)
+      eager
+      do { t = 0; }
+
+    on sig_out
+      from l0 to l0
+      eager
+      do { push_back(q, val, size); }
+
+    on sig_return
+      from l1 to l2
+      eager
+
+    on sig_out
+      from l1 to l1
+      eager
+      do { push_back(q, val, size); }
+
+    on silent
+      from l2 to l0
+      provided (t == miat)
+      eager
+      do { t = 0; }
+
+    on sig_out
+      from l2 to l2
+      eager
+      do { push_back(q, val, size); }
+
+    invariant inv1 at l1 provided (t <= deadline)
+    invariant inv2 at l2 provided (t <= miat)
+  end
+
+
+  // TASTE terminal functions
+  atom type JoystickDriver()
+    clock t unit millisecond
+    data asn1SccBase_commands_Motion2D v
+    data asn1SccBase_commands_Motion2D JoystickDriver_cmd_cmd_val
+    export port Port JoystickDriver_step_in()
+    export port Port JoystickDriver_step_return()
+    export port portBase_commands_Motion2D JoystickDriver_cmd_out(JoystickDriver_cmd_cmd_val)
+
+    port Port silent()
+
+    @fault
+    port Port fault1()
+
+    place Wait, l1, l2, l3, l4, l5, l6 
+
+    initial to Wait
+      do { t = 0; }
+
+    // Definition of state Wait
+
+    on JoystickDriver_step_in
+      from Wait to l1
+      eager
+
+    on silent
+      from l1 to l2
+      eager
+      do { set_translation(v,2.0); set_rotation(v,3.0); set_heading(v,0.5); }
+
+    internal
+      from l2 to l3
+      do { JoystickDriver_cmd_cmd_val = v; }
+
+    on JoystickDriver_cmd_out
+      from l3 to l4
+      eager
+
+    on JoystickDriver_step_return
+      from l4 to Wait
+      eager
+    
+    on fault1
+      from Wait to l5
+      provided (t < 100)
+      lazy
+
+    on silent
+      from l5 to Wait
+      provided (t >=150)
+      lazy
+      do { t = 0; }
+
+    on JoystickDriver_step_in
+      from l5 to l6
+      eager
+
+    on JoystickDriver_step_return
+      from l6 to l5
+      eager
+    
+
+  end
+
+  atom type CmdDispatcher()
+    clock t unit millisecond
+    data asn1SccBase_commands_Motion2D v
+    data asn1SccBase_commands_Motion2D CmdDispatcher_cmd_cmd_val
+    data asn1SccBase_commands_Motion2D CmdDispatcher_log_cmd_cmd_val
+    data asn1SccBase_commands_Motion2D CmdDispatcher_test_cmd_cmd_val
+    export port portBase_commands_Motion2D CmdDispatcher_cmd_in(CmdDispatcher_cmd_cmd_val)
+    export port Port CmdDispatcher_cmd_return()
+    export port portBase_commands_Motion2D CmdDispatcher_log_cmd_out(CmdDispatcher_log_cmd_cmd_val)
+    export port portBase_commands_Motion2D CmdDispatcher_test_cmd_out(CmdDispatcher_test_cmd_cmd_val)
+
+    port Port silent()
+
+    @fault
+    port Port fault2()
+
+    place Wait, l1, l2, l3, l4, l5, l6, l7, l8, l9
+
+    initial to Wait
+      do { }
+
+    on CmdDispatcher_cmd_in
+      from Wait to l1
+      eager
+
+    internal
+      from l1 to l2
+      do { v = CmdDispatcher_cmd_cmd_val; }
+
+    internal
+      from l2 to l3
+      do { CmdDispatcher_log_cmd_cmd_val = v; }
+
+    on CmdDispatcher_log_cmd_out
+      from l3 to l4
+      eager
+
+    internal
+      from l4 to l5
+      do { CmdDispatcher_test_cmd_cmd_val = v; }
+
+    on CmdDispatcher_test_cmd_out
+      from l5 to l6
+      eager
+
+    on CmdDispatcher_cmd_return
+      from l6 to Wait
+      eager
+    /*
+    on fault2
+      from l3 to l7
+      eager
+      do { t = 0; }
+
+    on CmdDispatcher_cmd_return
+      from l7 to l8
+      eager
+
+    on silent 
+      from l8 to Wait
+      provided (t > 100)
+      lazy
+
+    on CmdDispatcher_cmd_in
+      from l8 to l9
+      eager
+
+    on CmdDispatcher_cmd_return
+      from l9 to l8
+      eager
+    */
+  end
+
+  atom type Watchdog()
+    clock t unit millisecond
+    data int timeout_val
+    data int timeout_eps
+    data int timeout
+    data asn1SccBase_commands_Motion2D Watchdog_test_cmd_cmd_val
+    data asn1SccBase_commands_Motion2D Watchdog_mot_cmd_cmd_val
+
+    export port portBase_commands_Motion2D Watchdog_test_cmd_in(Watchdog_test_cmd_cmd_val)
+    export port Port Watchdog_test_cmd_return()
+    export port portBase_commands_Motion2D Watchdog_mot_cmd_out(Watchdog_mot_cmd_cmd_val)
+ 
+    port Port wdog_timeout()
+
+    place Wait, l1, l2, l3, l4, l5
+
+    initial to Wait
+      do { t = 0; 
+           timeout_val = 100; 
+           timeout_eps = 10; 
+           timeout = timeout_val + timeout_eps;
+         }
+
+    on Watchdog_test_cmd_in
+      from Wait to l1
+      eager
+
+    internal
+      from l1 to l2
+      do { Watchdog_mot_cmd_cmd_val = Watchdog_test_cmd_cmd_val; }
+
+    on Watchdog_mot_cmd_out
+      from l2 to l3
+      eager
+      do { t = 0; }
+
+    on Watchdog_test_cmd_return
+      from l3 to Wait
+      eager
+
+    on wdog_timeout
+      from Wait to l4
+      provided ( t >= timeout) 
+      eager
+
+    internal
+      from l4 to l5
+      do { set_translation(Watchdog_mot_cmd_cmd_val, 0.0); 
+           set_rotation(Watchdog_mot_cmd_cmd_val, 0.0);
+           set_heading(Watchdog_mot_cmd_cmd_val, 0.0);
+          }
+
+    on Watchdog_mot_cmd_out
+      from l5 to Wait
+      do { t = 0; }
+
+  end
+
+  atom type Logger()
+    data asn1SccBase_commands_Motion2D v
+    data asn1SccBase_commands_Motion2D Logger_log_cmd_cmd_val
+    export port portBase_commands_Motion2D Logger_log_cmd_in(Logger_log_cmd_cmd_val)
+    export port Port Logger_log_cmd_return()
+
+    port Port silent()
+
+    place Wait, l1, l2, l3
+
+    initial to Wait
+      do { }
+
+    // Definition of state Wait
+
+    on Logger_log_cmd_in
+      from Wait to l1
+      eager
+
+    internal
+      from l1 to l2
+      do { v = Logger_log_cmd_cmd_val; }
+
+    on silent
+      from l2 to l3
+      eager
+      do { write("Logging"); 
+           write(" "); write(get_translation(v)); 
+           write(" "); write(get_rotation(v)); 
+           write(" "); writeln(get_heading(v)); }
+
+    on Logger_log_cmd_return
+      from l3 to Wait
+      eager
+
+  end
+
+  atom type BLSClient()
+    data asn1SccBase_commands_Motion2D v
+    data asn1SccBase_commands_Motion2D BLSClient_mot_cmd_cmd_val
+    export port portBase_commands_Motion2D BLSClient_mot_cmd_in(BLSClient_mot_cmd_cmd_val)
+    export port Port BLSClient_mot_cmd_return()
+
+    port Port silent()
+
+    place Wait, l1, l2, l3, l4, l5, l6, l7, l8
+
+    initial to Wait
+      do { }
+
+    // Definition of state Wait
+
+    on BLSClient_mot_cmd_in
+      from Wait to l1
+      eager
+
+    internal
+      from l1 to l2
+      do { v = BLSClient_mot_cmd_cmd_val; }
+
+    on silent
+      from l2 to l4
+      provided ((get_translation(v) == 0.0 && get_rotation(v) == 0.0 && get_heading(v) == 0.0) == true)
+      eager
+
+    on silent
+      from l4 to l5
+      eager
+      do { writeln("Stop command received"); }
+
+    internal
+      from l5 to l3
+
+    on silent
+      from l2 to l6
+      provided ((get_translation(v) == 0.0 && get_rotation(v) == 0.0 && get_heading(v) == 0.0) == false)
+      eager
+
+    on silent
+      from l6 to l7
+      eager
+      do { writeln("Command received"); }
+
+    internal
+      from l7 to l3
+
+    internal
+      from l3 to l8
+
+    on BLSClient_mot_cmd_return
+      from l8 to Wait
+      eager
+
+  end
+
+  // Compound types
+  compound type Syst()
+    component JoystickDriver JoystickDriver()
+    component TASTE_PI_Cyclic JoystickDriver_step(100,10)
+    component CmdDispatcher CmdDispatcher()
+    component TASTE_PI_Sporadic_Base_commands_Motion2D CmdDispatcher_cmd(10,10,1)
+    component Watchdog Watchdog()
+    component TASTE_PI_Sporadic_Base_commands_Motion2D Watchdog_test_cmd(10,10,1)
+    component Logger Logger()
+    component TASTE_PI_Sporadic_Base_commands_Motion2D Logger_log_cmd(10,10,1)
+    component BLSClient BLSClient()
+    component TASTE_PI_Sporadic_Base_commands_Motion2D BLSClient_mot_cmd(10,10,1)
+
+    connector Sync JoystickDriver_step2JoystickDriver(JoystickDriver_step.sig_out,JoystickDriver.JoystickDriver_step_in)
+    connector Sync JoystickDriver2JoystickDriver_step(JoystickDriver.JoystickDriver_step_return,JoystickDriver_step.sig_return)
+    connector Sync CmdDispatcher2CmdDispatcher_cmd(CmdDispatcher.CmdDispatcher_cmd_return,CmdDispatcher_cmd.sig_return)
+    connector Sync Watchdog2Watchdog_test_cmd(Watchdog.Watchdog_test_cmd_return,Watchdog_test_cmd.sig_return)
+    connector Sync Logger2Logger_log_cmd(Logger.Logger_log_cmd_return,Logger_log_cmd.sig_return)
+    connector Sync BLSClient2BLSClient_mot_cmd(BLSClient.BLSClient_mot_cmd_return,BLSClient_mot_cmd.sig_return)
+    connector SendRecBase_commands_Motion2D JoystickDriver2CmdDispatcher_cmd(JoystickDriver.JoystickDriver_cmd_out,CmdDispatcher_cmd.sig_out)
+    connector SendRecQueueBase_commands_Motion2D CmdDispatcher_cmd2CmdDispatcher(CmdDispatcher_cmd.sig_in,CmdDispatcher.CmdDispatcher_cmd_in)
+    connector SendRecBase_commands_Motion2D CmdDispatcher2Watchdog_test_cmd(CmdDispatcher.CmdDispatcher_test_cmd_out,Watchdog_test_cmd.sig_out)
+    connector SendRecQueueBase_commands_Motion2D Watchdog_test_cmd2Watchdog(Watchdog_test_cmd.sig_in,Watchdog.Watchdog_test_cmd_in)
+    connector SendRecBase_commands_Motion2D CmdDispatcher2Logger_log_cmd(CmdDispatcher.CmdDispatcher_log_cmd_out,Logger_log_cmd.sig_out)
+    connector SendRecQueueBase_commands_Motion2D Logger_log_cmd2Logger(Logger_log_cmd.sig_in,Logger.Logger_log_cmd_in)
+    connector SendRecBase_commands_Motion2D Watchdog2BLSClient_mot_cmd(Watchdog.Watchdog_mot_cmd_out,BLSClient_mot_cmd.sig_out)
+    connector SendRecQueueBase_commands_Motion2D BLSClient_mot_cmd2BLSClient(BLSClient_mot_cmd.sig_in,BLSClient.BLSClient_mot_cmd_in)
+  end
+end

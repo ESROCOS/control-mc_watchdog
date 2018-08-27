@@ -1,0 +1,31 @@
+/* CIF Keep Specific Geode ASNFilename 'dataview-uniq.asn' */
+USE Datamodel;
+SYSTEM cmddispatcher;
+
+	/* CIF Keep Specific Geode PARAMNAMES cmd_val */
+	SIGNAL cmd (Base_commands_Motion2D);
+
+	/* CIF Keep Specific Geode PARAMNAMES cmd_val */
+	SIGNAL log_cmd (Base_commands_Motion2D);
+
+	/* CIF Keep Specific Geode PARAMNAMES cmd_val */
+	SIGNAL test_cmd (Base_commands_Motion2D);
+
+	CHANNEL c
+		FROM ENV TO cmddispatcher WITH cmd;
+		FROM cmddispatcher TO ENV WITH log_cmd,test_cmd;
+	ENDCHANNEL;
+
+	BLOCK cmddispatcher;
+
+		SIGNALROUTE r
+			FROM ENV TO cmddispatcher WITH cmd;
+			FROM cmddispatcher TO ENV WITH log_cmd,test_cmd;
+
+		CONNECT c and r;
+
+		PROCESS cmddispatcher REFERENCED;
+
+	ENDBLOCK;
+
+ENDSYSTEM;

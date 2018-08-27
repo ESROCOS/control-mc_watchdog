@@ -1,0 +1,27 @@
+/* CIF Keep Specific Geode ASNFilename 'dataview-uniq.asn' */
+USE Datamodel;
+SYSTEM joystickdriver;
+
+	SIGNAL step;
+
+	/* CIF Keep Specific Geode PARAMNAMES cmd_val */
+	SIGNAL cmd (Base_commands_Motion2D);
+
+	CHANNEL c
+		FROM ENV TO joystickdriver WITH step;
+		FROM joystickdriver TO ENV WITH cmd;
+	ENDCHANNEL;
+
+	BLOCK joystickdriver;
+
+		SIGNALROUTE r
+			FROM ENV TO joystickdriver WITH step;
+			FROM joystickdriver TO ENV WITH cmd;
+
+		CONNECT c and r;
+
+		PROCESS joystickdriver REFERENCED;
+
+	ENDBLOCK;
+
+ENDSYSTEM;

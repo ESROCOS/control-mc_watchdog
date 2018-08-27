@@ -1,0 +1,23 @@
+/* CIF Keep Specific Geode ASNFilename 'dataview-uniq.asn' */
+USE Datamodel;
+SYSTEM blsclient;
+
+	/* CIF Keep Specific Geode PARAMNAMES cmd_val */
+	SIGNAL mot_cmd (Base_commands_Motion2D);
+
+	CHANNEL c
+		FROM ENV TO blsclient WITH mot_cmd;
+	ENDCHANNEL;
+
+	BLOCK blsclient;
+
+		SIGNALROUTE r
+			FROM ENV TO blsclient WITH mot_cmd;
+
+		CONNECT c and r;
+
+		PROCESS blsclient REFERENCED;
+
+	ENDBLOCK;
+
+ENDSYSTEM;

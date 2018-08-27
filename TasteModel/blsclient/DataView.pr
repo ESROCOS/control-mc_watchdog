@@ -1,0 +1,918 @@
+Datamodel DEFINITIONS ::= BEGIN
+
+-- ./dataview-uniq.asn
+Dummy2Base_T ::= DummyBase_T
+
+-- ./dataview-uniq.asn
+Base_JointState_MODE ::= ENUMERATED {
+    base_jointstate_mode_acceleration(0),
+    base_jointstate_mode_effort(1),
+    base_jointstate_mode_position(2),
+    base_jointstate_mode_raw(3),
+    base_jointstate_mode_speed(4),
+    base_jointstate_mode_unset(5)
+}
+
+-- ./dataview-uniq.asn
+Base_Time_Resolution ::= ENUMERATED {
+    base_time_resolution_microseconds(0),
+    base_time_resolution_milliseconds(1),
+    base_time_resolution_seconds(2)
+}
+
+-- ./dataview-uniq.asn
+Base_geometry_SplineBase_CoordinateType ::= ENUMERATED {
+    base_geometry_splinebase_coordinatetype_derivative_to_next(0),
+    base_geometry_splinebase_coordinatetype_derivative_to_prior(1),
+    base_geometry_splinebase_coordinatetype_knuckle_point(2),
+    base_geometry_splinebase_coordinatetype_ordinary_point(3),
+    base_geometry_splinebase_coordinatetype_second_derivative_to_next(4),
+    base_geometry_splinebase_coordinatetype_second_derivative_to_prior(5),
+    base_geometry_splinebase_coordinatetype_tangent_point_for_next(6),
+    base_geometry_splinebase_coordinatetype_tangent_point_for_prior(7)
+}
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_DEPTH_MEASUREMENT_STATE ::= ENUMERATED {
+    base_samples_depthmap_depth_measurement_state_measurement_error(0),
+    base_samples_depthmap_depth_measurement_state_too_far(1),
+    base_samples_depthmap_depth_measurement_state_too_near(2),
+    base_samples_depthmap_depth_measurement_state_valid_measurement(3)
+}
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_PROJECTION_TYPE ::= ENUMERATED {
+    base_samples_depthmap_projection_type_planar(0),
+    base_samples_depthmap_projection_type_polar(1)
+}
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_UNIT_AXIS ::= ENUMERATED {
+    base_samples_depthmap_unit_axis_unit_x(0),
+    base_samples_depthmap_unit_axis_unit_y(1),
+    base_samples_depthmap_unit_axis_unit_z(2)
+}
+
+-- ./dataview-uniq.asn
+Base_samples_LASER_RANGE_ERRORS ::= ENUMERATED {
+    base_samples_laser_range_errors_end_laser_range_errors(0),
+    base_samples_laser_range_errors_max_range_error(1),
+    base_samples_laser_range_errors_measurement_error(2),
+    base_samples_laser_range_errors_other_range_errors(3),
+    base_samples_laser_range_errors_too_far(4),
+    base_samples_laser_range_errors_too_near(5)
+}
+
+-- ./dataview-uniq.asn
+Base_samples_frame_frame_mode_t ::= ENUMERATED {
+    base_samples_frame_frame_mode_t_compressed_modes(0),
+    base_samples_frame_frame_mode_t_mode_bayer(1),
+    base_samples_frame_frame_mode_t_mode_bayer_bggr(2),
+    base_samples_frame_frame_mode_t_mode_bayer_gbrg(3),
+    base_samples_frame_frame_mode_t_mode_bayer_grbg(4),
+    base_samples_frame_frame_mode_t_mode_bayer_rggb(5),
+    base_samples_frame_frame_mode_t_mode_bgr(6),
+    base_samples_frame_frame_mode_t_mode_grayscale(7),
+    base_samples_frame_frame_mode_t_mode_jpeg(8),
+    base_samples_frame_frame_mode_t_mode_pjpg(9),
+    base_samples_frame_frame_mode_t_mode_png(10),
+    base_samples_frame_frame_mode_t_mode_rgb(11),
+    base_samples_frame_frame_mode_t_mode_rgb32(12),
+    base_samples_frame_frame_mode_t_mode_undefined(13),
+    base_samples_frame_frame_mode_t_mode_uyvy(14),
+    base_samples_frame_frame_mode_t_raw_modes(15)
+}
+
+-- ./dataview-uniq.asn
+Base_samples_frame_frame_status_t ::= ENUMERATED {
+    base_samples_frame_frame_status_t_status_empty(0),
+    base_samples_frame_frame_status_t_status_invalid(1),
+    base_samples_frame_frame_status_t_status_valid(2)
+}
+
+-- ./dataview-uniq.asn
+Wrappers_geometry_SplineType ::= ENUMERATED {
+    wrappers_geometry_splinetype_degenerate(0),
+    wrappers_geometry_splinetype_polynomial_bezier(1),
+    wrappers_geometry_splinetype_polynomial_bspline(2),
+    wrappers_geometry_splinetype_rational_bezier(3),
+    wrappers_geometry_splinetype_rational_bspline(4)
+}
+
+-- ./dataview-uniq.asn
+Base_JointTrajectory ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointState
+
+-- ./dataview-uniq.asn
+Std_orogen_typekits_mtype_std_vector_base_JointTransform ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointTransform_m
+
+-- ./dataview-uniq.asn
+Std_orogen_typekits_mtype_std_vector_base_Waypoint ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Waypoint_m
+
+-- ./dataview-uniq.asn
+Std_orogen_typekits_mtype_std_vector_base_Wrench ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Wrench_m
+
+-- ./dataview-uniq.asn
+Std_vector_Wrappers_Vector4d ::= SEQUENCE (SIZE (1 .. 200)) OF Wrappers_Vector4d
+
+-- ./dataview-uniq.asn
+Std_orogen_typekits_mtype_std_vector_base_Trajectory ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Trajectory_m
+
+-- ./dataview-uniq.asn
+Base_Pose ::= SEQUENCE {
+    position	Wrappers_Vector3d,
+    orientation	Wrappers_Quaterniond
+}
+
+-- ./dataview-uniq.asn
+Base_TransformWithCovariance ::= SEQUENCE {
+    translation	Wrappers_Vector3d,
+    orientation	Wrappers_Quaterniond,
+    cov	Wrappers_Matrix6d
+}
+
+-- ./dataview-uniq.asn
+Base_TwistWithCovariance ::= SEQUENCE {
+    vel	Wrappers_Vector3d,
+    rot	Wrappers_Vector3d,
+    cov	Wrappers_Matrix6d
+}
+
+-- ./dataview-uniq.asn
+Base_Wrench ::= SEQUENCE {
+    force	Wrappers_Vector3d,
+    torque	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_Angle ::= SEQUENCE {
+    rad	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_JointState ::= SEQUENCE {
+    position	T_Double,
+    speed	T_Float,
+    effort	T_Float,
+    raw	T_Float,
+    acceleration	T_Float
+}
+
+-- ./dataview-uniq.asn
+Base_Pose2D ::= SEQUENCE {
+    position	Wrappers_Vector2d,
+    orientation	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_PoseUpdateThreshold ::= SEQUENCE {
+    distance	T_Double,
+    angle	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_Pressure ::= SEQUENCE {
+    pascal	T_Float
+}
+
+-- ./dataview-uniq.asn
+Base_Temperature ::= SEQUENCE {
+    kelvin	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_Time ::= SEQUENCE {
+    microseconds	T_Int64
+}
+
+-- ./dataview-uniq.asn
+Base_Trajectory ::= SEQUENCE {
+    speed	T_Double,
+    spline	Wrappers_geometry_Spline
+}
+
+-- ./dataview-uniq.asn
+Base_Waypoint ::= SEQUENCE {
+    position	Wrappers_Vector3d,
+    heading	T_Double,
+    tol_position	T_Double,
+    tol_heading	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_JointLimitRange ::= SEQUENCE {
+    min	Base_JointState,
+    max	Base_JointState
+}
+
+-- ./dataview-uniq.asn
+Base_TimeStamped_Base_commands_Motion2D ::= SEQUENCE {
+    translation	T_Double,
+    rotation	T_Double,
+    heading	Base_Angle,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Base_LinearAngular6DCommand ::= SEQUENCE {
+    time	Base_Time,
+    linear	Wrappers_Vector3d,
+    angular	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_commands_Motion2D ::= SEQUENCE {
+    translation	T_Double,
+    rotation	T_Double,
+    heading	Base_Angle
+}
+
+-- ./dataview-uniq.asn
+Base_commands_Speed6D ::= SEQUENCE {
+    surge	T_Double,
+    sway	T_Double,
+    heave	T_Double,
+    roll	T_Double,
+    pitch	T_Double,
+    yaw	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_samples_BodyState ::= SEQUENCE {
+    time	Base_Time,
+    pose	Base_TransformWithCovariance,
+    velocity	Base_TwistWithCovariance
+}
+
+-- ./dataview-uniq.asn
+Base_samples_IMUSensors ::= SEQUENCE {
+    time	Base_Time,
+    acc	Wrappers_Vector3d,
+    gyro	Wrappers_Vector3d,
+    mag	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Motion2D ::= SEQUENCE {
+    translation	T_Double,
+    rotation	T_Double,
+    heading	Base_Angle,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Pressure ::= SEQUENCE {
+    pascal	T_Float,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Base_samples_RigidBodyAcceleration ::= SEQUENCE {
+    time	Base_Time,
+    acceleration	Wrappers_Vector3d,
+    cov_acceleration	Wrappers_Matrix3d,
+    angular_acceleration	Wrappers_Vector3d,
+    cov_angular_acceleration	Wrappers_Matrix3d
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Wrench ::= SEQUENCE {
+    force	Wrappers_Vector3d,
+    torque	Wrappers_Vector3d,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Base_samples_frame_frame_size_t ::= SEQUENCE {
+    width	T_UInt16,
+    height	T_UInt16
+}
+
+-- ./dataview-uniq.asn
+Base_JointLimits ::= SEQUENCE {
+    names	Base_JointLimits_names,
+    elements	Base_JointLimits_elements
+}
+
+-- ./dataview-uniq.asn
+Base_JointTransform ::= SEQUENCE {
+    sourceframe	T_String,
+    targetframe	T_String,
+    rotationaxis	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_JointsTrajectory ::= SEQUENCE {
+    names	Base_JointsTrajectory_names,
+    elements	Base_JointsTrajectory_elements,
+    times_val	Base_JointsTrajectory_times_val
+}
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointLimitRange ::= SEQUENCE {
+    names	Base_NamedVector_Base_JointLimitRange_names,
+    elements	Base_NamedVector_Base_JointLimitRange_elements
+}
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointState ::= SEQUENCE {
+    names	Base_NamedVector_Base_JointState_names,
+    elements	Base_JointTrajectory
+}
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_Wrench ::= SEQUENCE {
+    names	Base_NamedVector_Base_Wrench_names,
+    elements	Base_NamedVector_Base_Wrench_elements
+}
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointTrajectory ::= SEQUENCE {
+    names	Base_NamedVector_Base_JointTrajectory_names,
+    elements	Base_NamedVector_Base_JointTrajectory_elements
+}
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap ::= SEQUENCE {
+    time	Base_Time,
+    timestamps	Base_samples_DepthMap_timestamps,
+    vertical_projection	Base_samples_DepthMap_PROJECTION_TYPE,
+    horizontal_projection	Base_samples_DepthMap_PROJECTION_TYPE,
+    vertical_interval	Base_samples_DepthMap_vertical_interval,
+    horizontal_interval	Base_samples_DepthMap_horizontal_interval,
+    vertical_size	T_UInt32,
+    horizontal_size	T_UInt32,
+    distances	Base_samples_DepthMap_distances,
+    remissions	Base_samples_DepthMap_remissions
+}
+
+-- ./dataview-uniq.asn
+Base_samples_DistanceImage ::= SEQUENCE {
+    time	Base_Time,
+    width	T_UInt16,
+    height	T_UInt16,
+    scale_x	T_Float,
+    scale_y	T_Float,
+    center_x	T_Float,
+    center_y	T_Float,
+    data	Base_samples_DistanceImage_data
+}
+
+-- ./dataview-uniq.asn
+Base_commands_Joints ::= SEQUENCE {
+    names	Base_commands_Joints_names,
+    elements	Base_JointTrajectory,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Base_samples_LaserScan ::= SEQUENCE {
+    time	Base_Time,
+    start_angle	T_Double,
+    angular_resolution	T_Double,
+    speed	T_Double,
+    ranges	Base_samples_LaserScan_ranges,
+    minrange	T_UInt32,
+    maxrange	T_UInt32,
+    remission	Base_samples_LaserScan_remission
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Pointcloud ::= SEQUENCE {
+    time	Base_Time,
+    points	Base_samples_Pointcloud_points,
+    colors	Base_samples_Pointcloud_colors
+}
+
+-- ./dataview-uniq.asn
+Base_samples_RigidBodyState ::= SEQUENCE {
+    time	Base_Time,
+    sourceframe	T_String,
+    targetframe	T_String,
+    position	Wrappers_Vector3d,
+    cov_position	Wrappers_Matrix3d,
+    orientation	Wrappers_Quaterniond,
+    cov_orientation	Wrappers_Matrix3d,
+    velocity	Wrappers_Vector3d,
+    cov_velocity	Wrappers_Matrix3d,
+    angular_velocity	Wrappers_Vector3d,
+    cov_angular_velocity	Wrappers_Matrix3d
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Sonar ::= SEQUENCE {
+    time	Base_Time,
+    timestamps	Base_samples_Sonar_timestamps,
+    bin_duration	Base_Time,
+    beam_width	Base_Angle,
+    beam_height	Base_Angle,
+    bearings	Base_samples_Sonar_bearings,
+    speed_of_sound	T_Float,
+    bin_count	T_UInt32,
+    beam_count	T_UInt32,
+    bins	Base_samples_Sonar_bins
+}
+
+-- ./dataview-uniq.asn
+Base_samples_SonarBeam ::= SEQUENCE {
+    time	Base_Time,
+    bearing	Base_Angle,
+    sampling_interval	T_Double,
+    speed_of_sound	T_Float,
+    beamwidth_horizontal	T_Float,
+    beamwidth_vertical	T_Float,
+    beam	Base_samples_SonarBeam_beam
+}
+
+-- ./dataview-uniq.asn
+Base_samples_SonarScan ::= SEQUENCE {
+    time	Base_Time,
+    data	Base_samples_SonarScan_data,
+    time_beams	Base_samples_SonarScan_time_beams,
+    number_of_beams	T_UInt16,
+    number_of_bins	T_UInt16,
+    start_bearing	Base_Angle,
+    angular_resolution	Base_Angle,
+    sampling_interval	T_Double,
+    speed_of_sound	T_Float,
+    beamwidth_horizontal	Base_Angle,
+    beamwidth_vertical	Base_Angle,
+    memory_layout_column	T_Boolean,
+    polar_coordinates	T_Boolean
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Wrenches ::= SEQUENCE {
+    names	Base_samples_Wrenches_names,
+    elements	Base_samples_Wrenches_elements,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Base_samples_frame_frame_attrib_t ::= SEQUENCE {
+    data	T_String,
+    name_val	T_String
+}
+
+-- ./dataview-uniq.asn
+Base_JointTransformVector ::= SEQUENCE {
+    names	Base_JointTransformVector_names,
+    elements	Base_JointTransformVector_elements
+}
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointTransform ::= SEQUENCE {
+    names	Base_NamedVector_Base_JointTransform_names,
+    elements	Base_NamedVector_Base_JointTransform_elements
+}
+
+-- ./dataview-uniq.asn
+Base_samples_frame_Frame ::= SEQUENCE {
+    time	Base_Time,
+    received_time	Base_Time,
+    image	Base_samples_frame_Frame_image,
+    attributes	Base_samples_frame_Frame_attributes,
+    size_val	Base_samples_frame_frame_size_t,
+    data_depth	T_UInt32,
+    pixel_size	T_UInt32,
+    row_size	T_UInt32,
+    frame_mode	Base_samples_frame_frame_mode_t,
+    frame_status	Base_samples_frame_frame_status_t
+}
+
+-- ./dataview-uniq.asn
+Base_samples_frame_FramePair ::= SEQUENCE {
+    time	Base_Time,
+    first	Base_samples_frame_Frame,
+    second	Base_samples_frame_Frame,
+    id	T_UInt32
+}
+
+-- ./dataview-uniq.asn
+Wrappers_AngleAxisd ::= SEQUENCE {
+    angle	T_Double,
+    axis	Wrappers_AngleAxisd_axis
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Vector2d ::= SEQUENCE {
+    data	Wrappers_Vector2d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix2d ::= SEQUENCE {
+    data	Wrappers_Matrix2d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Vector3d ::= SEQUENCE {
+    data	Wrappers_Vector3d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix3d ::= SEQUENCE {
+    data	Wrappers_Matrix3d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Vector4d ::= SEQUENCE {
+    data	Wrappers_Vector4d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix4d ::= SEQUENCE {
+    data	Wrappers_Matrix4d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Vector6d ::= SEQUENCE {
+    data	Wrappers_Vector6d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix6d ::= SEQUENCE {
+    data	Wrappers_Matrix6d_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_MatrixXd ::= SEQUENCE {
+    rows	T_Int32,
+    cols	T_Int32,
+    data	Wrappers_MatrixXd_data
+}
+
+-- ./dataview-uniq.asn
+Wrappers_Quaterniond ::= SEQUENCE {
+    im	Wrappers_Quaterniond_im,
+    re	T_Double
+}
+
+-- ./dataview-uniq.asn
+Wrappers_VectorXd ::= SEQUENCE {
+    data	Wrappers_VectorXd_data
+}
+
+-- ./dataview-uniq.asn
+Base_JointTransform_m ::= SEQUENCE {
+    sourceframe	T_String,
+    targetframe	T_String,
+    rotationaxis	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_Pose2D_m ::= SEQUENCE {
+    position	Wrappers_Vector2d,
+    orientation	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_Pose_m ::= SEQUENCE {
+    position	Wrappers_Vector3d,
+    orientation	Wrappers_Quaterniond
+}
+
+-- ./dataview-uniq.asn
+Base_TransformWithCovariance_m ::= SEQUENCE {
+    translation	Wrappers_Vector3d,
+    orientation	Wrappers_Quaterniond,
+    cov	Wrappers_Matrix6d
+}
+
+-- ./dataview-uniq.asn
+Base_TwistWithCovariance_m ::= SEQUENCE {
+    vel	Wrappers_Vector3d,
+    rot	Wrappers_Vector3d,
+    cov	Wrappers_Matrix6d
+}
+
+-- ./dataview-uniq.asn
+Base_Waypoint_m ::= SEQUENCE {
+    position	Wrappers_Vector3d,
+    heading	T_Double,
+    tol_position	T_Double,
+    tol_heading	T_Double
+}
+
+-- ./dataview-uniq.asn
+Base_Wrench_m ::= SEQUENCE {
+    force	Wrappers_Vector3d,
+    torque	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_commands_LinearAngular6DCommand_m ::= SEQUENCE {
+    time	Base_Time,
+    linear	Wrappers_Vector3d,
+    angular	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_samples_BodyState_m ::= SEQUENCE {
+    time	Base_Time,
+    pose	Base_TransformWithCovariance_m,
+    velocity	Base_TwistWithCovariance_m
+}
+
+-- ./dataview-uniq.asn
+Base_samples_IMUSensors_m ::= SEQUENCE {
+    time	Base_Time,
+    acc	Wrappers_Vector3d,
+    gyro	Wrappers_Vector3d,
+    mag	Wrappers_Vector3d
+}
+
+-- ./dataview-uniq.asn
+Base_samples_RigidBodyAcceleration_m ::= SEQUENCE {
+    time	Base_Time,
+    acceleration	Wrappers_Vector3d,
+    cov_acceleration	Wrappers_Matrix3d,
+    angular_acceleration	Wrappers_Vector3d,
+    cov_angular_acceleration	Wrappers_Matrix3d
+}
+
+-- ./dataview-uniq.asn
+Base_samples_RigidBodyState_m ::= SEQUENCE {
+    time	Base_Time,
+    sourceframe	T_String,
+    targetframe	T_String,
+    position	Wrappers_Vector3d,
+    cov_position	Wrappers_Matrix3d,
+    orientation	Wrappers_Quaterniond,
+    cov_orientation	Wrappers_Matrix3d,
+    velocity	Wrappers_Vector3d,
+    cov_velocity	Wrappers_Matrix3d,
+    angular_velocity	Wrappers_Vector3d,
+    cov_angular_velocity	Wrappers_Matrix3d
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Wrench_m ::= SEQUENCE {
+    force	Wrappers_Vector3d,
+    torque	Wrappers_Vector3d,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Base_JointTransformVector_m ::= SEQUENCE {
+    names	Base_JointTransformVector_m_names,
+    elements	Std_orogen_typekits_mtype_std_vector_base_JointTransform
+}
+
+-- ./dataview-uniq.asn
+Base_NamedVector_base_JointTransform_m ::= SEQUENCE {
+    names	Base_NamedVector_base_JointTransform_m_names,
+    elements	Std_orogen_typekits_mtype_std_vector_base_JointTransform
+}
+
+-- ./dataview-uniq.asn
+Base_NamedVector_base_Wrench_m ::= SEQUENCE {
+    names	Base_NamedVector_base_Wrench_m_names,
+    elements	Std_orogen_typekits_mtype_std_vector_base_Wrench
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Pointcloud_m ::= SEQUENCE {
+    time	Base_Time,
+    points	Base_samples_Pointcloud_m_points,
+    colors	Base_samples_Pointcloud_m_colors
+}
+
+-- ./dataview-uniq.asn
+Base_samples_Wrenches_m ::= SEQUENCE {
+    names	Base_samples_Wrenches_m_names,
+    elements	Std_orogen_typekits_mtype_std_vector_base_Wrench,
+    time	Base_Time
+}
+
+-- ./dataview-uniq.asn
+Wrappers_geometry_Spline ::= SEQUENCE {
+    geometric_resolution	T_Double,
+    dimension	T_Int32,
+    curve_order	T_Int32,
+    kind	Wrappers_geometry_SplineType,
+    knots	Wrappers_geometry_Spline_knots,
+    vertices	Wrappers_geometry_Spline_vertices
+}
+
+-- ./dataview-uniq.asn
+Base_Trajectory_m ::= SEQUENCE {
+    speed	T_Double,
+    spline	Wrappers_geometry_Spline
+}
+
+-- ./dataview-uniq.asn
+Wrappers_geometry_Spline_vertices ::= SEQUENCE (SIZE (1 .. 200)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_geometry_Spline_knots ::= SEQUENCE (SIZE (1 .. 200)) OF T_Double
+
+-- ./dataview-uniq.asn
+Base_samples_Wrenches_m_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_samples_Pointcloud_m_colors ::= SEQUENCE (SIZE (1 .. 200)) OF Wrappers_Vector4d
+
+-- ./dataview-uniq.asn
+Base_samples_Pointcloud_m_points ::= SEQUENCE (SIZE (1 .. 200)) OF Wrappers_Vector3d
+
+-- ./dataview-uniq.asn
+Base_NamedVector_base_Wrench_m_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_NamedVector_base_JointTransform_m_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_JointTransformVector_m_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Wrappers_VectorXd_data ::= SEQUENCE (SIZE (1 .. 200)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Quaterniond_im ::= SEQUENCE (SIZE (1 .. 3)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_MatrixXd_data ::= SEQUENCE (SIZE (1 .. 200)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix6d_data ::= SEQUENCE (SIZE (1 .. 36)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Vector6d_data ::= SEQUENCE (SIZE (1 .. 6)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix4d_data ::= SEQUENCE (SIZE (1 .. 16)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Vector4d_data ::= SEQUENCE (SIZE (1 .. 4)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix3d_data ::= SEQUENCE (SIZE (1 .. 9)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Vector3d_data ::= SEQUENCE (SIZE (1 .. 3)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Matrix2d_data ::= SEQUENCE (SIZE (1 .. 4)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_Vector2d_data ::= SEQUENCE (SIZE (1 .. 2)) OF T_Double
+
+-- ./dataview-uniq.asn
+Wrappers_AngleAxisd_axis ::= SEQUENCE (SIZE (1 .. 3)) OF T_Double
+
+-- ./dataview-uniq.asn
+Base_samples_frame_Frame_attributes ::= SEQUENCE (SIZE (1 .. 200)) OF Base_samples_frame_frame_attrib_t
+
+-- ./dataview-uniq.asn
+Base_samples_frame_Frame_image ::= OCTET STRING (SIZE (1 .. 200))
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointTransform_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointTransform
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointTransform_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_JointTransformVector_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointTransform
+
+-- ./dataview-uniq.asn
+Base_JointTransformVector_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_samples_Wrenches_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Wrench
+
+-- ./dataview-uniq.asn
+Base_samples_Wrenches_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_samples_SonarScan_time_beams ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Time
+
+-- ./dataview-uniq.asn
+Base_samples_SonarScan_data ::= OCTET STRING (SIZE (1 .. 200))
+
+-- ./dataview-uniq.asn
+Base_samples_SonarBeam_beam ::= OCTET STRING (SIZE (1 .. 200))
+
+-- ./dataview-uniq.asn
+Base_samples_Sonar_bins ::= SEQUENCE (SIZE (1 .. 200)) OF T_Float
+
+-- ./dataview-uniq.asn
+Base_samples_Sonar_bearings ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Angle
+
+-- ./dataview-uniq.asn
+Base_samples_Sonar_timestamps ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Time
+
+-- ./dataview-uniq.asn
+Base_samples_Pointcloud_colors ::= SEQUENCE (SIZE (1 .. 200)) OF Wrappers_Vector4d
+
+-- ./dataview-uniq.asn
+Base_samples_Pointcloud_points ::= SEQUENCE (SIZE (1 .. 200)) OF Wrappers_Vector3d
+
+-- ./dataview-uniq.asn
+Base_samples_LaserScan_remission ::= SEQUENCE (SIZE (1 .. 200)) OF T_Float
+
+-- ./dataview-uniq.asn
+Base_samples_LaserScan_ranges ::= SEQUENCE (SIZE (1 .. 200)) OF T_UInt32
+
+-- ./dataview-uniq.asn
+Base_commands_Joints_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_samples_DistanceImage_data ::= SEQUENCE (SIZE (1 .. 200)) OF T_Float
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_remissions ::= SEQUENCE (SIZE (1 .. 200)) OF T_Float
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_distances ::= SEQUENCE (SIZE (1 .. 200)) OF T_Float
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_horizontal_interval ::= SEQUENCE (SIZE (1 .. 200)) OF T_Double
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_vertical_interval ::= SEQUENCE (SIZE (1 .. 200)) OF T_Double
+
+-- ./dataview-uniq.asn
+Base_samples_DepthMap_timestamps ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Time
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointTrajectory_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointTrajectory
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointTrajectory_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_Wrench_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Wrench
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_Wrench_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointState_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointLimitRange_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointLimitRange
+
+-- ./dataview-uniq.asn
+Base_NamedVector_Base_JointLimitRange_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_JointsTrajectory_times_val ::= SEQUENCE (SIZE (1 .. 200)) OF Base_Time
+
+-- ./dataview-uniq.asn
+Base_JointsTrajectory_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointTrajectory
+
+-- ./dataview-uniq.asn
+Base_JointsTrajectory_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+Base_JointLimits_elements ::= SEQUENCE (SIZE (1 .. 200)) OF Base_JointLimitRange
+
+-- ./dataview-uniq.asn
+Base_JointLimits_names ::= SEQUENCE (SIZE (1 .. 200)) OF T_String
+
+-- ./dataview-uniq.asn
+T_Double ::= REAL (-1.79769313486231570000E+308 .. 1.79769313486231570000E+308)
+
+-- ./dataview-uniq.asn
+T_Float ::= REAL (-3.40282346600000020000E+038 .. 3.40282346600000020000E+038)
+
+-- ./dataview-uniq.asn
+T_Int16 ::= INTEGER (-32768 .. 32767)
+
+-- ./dataview-uniq.asn
+T_UInt16 ::= INTEGER (0 .. 65535)
+
+-- ./dataview-uniq.asn
+T_UInt64 ::= INTEGER (0 .. 9223372036854775807)
+
+-- ./dataview-uniq.asn
+T_Int64 ::= INTEGER (-9223372036854775807 .. 9223372036854775807)
+
+-- ./dataview-uniq.asn
+T_String ::= OCTET STRING (SIZE (0 .. 60))
+
+-- ./dataview-uniq.asn
+T_Time ::= SEQUENCE {
+    secs	T_UInt32,
+    nsecs	T_UInt32
+}
+
+-- ./dataview-uniq.asn
+T_Int32 ::= INTEGER (-2147483648 .. 2147483647)
+
+-- ./dataview-uniq.asn
+T_UInt32 ::= INTEGER (0 .. 4294967295)
+
+-- ./dataview-uniq.asn
+T_Int8 ::= INTEGER (-128 .. 127)
+
+-- ./dataview-uniq.asn
+T_UInt8 ::= INTEGER (0 .. 255)
+
+-- ./dataview-uniq.asn
+T_Boolean ::= BOOLEAN
+
+-- ./dataview-uniq.asn
+DummyBase_T ::= T_UInt32
+
+END

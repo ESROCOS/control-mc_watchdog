@@ -1,0 +1,23 @@
+/* CIF Keep Specific Geode ASNFilename 'dataview-uniq.asn' */
+USE Datamodel;
+SYSTEM logger;
+
+	/* CIF Keep Specific Geode PARAMNAMES cmd_val */
+	SIGNAL log_cmd (Base_commands_Motion2D);
+
+	CHANNEL c
+		FROM ENV TO logger WITH log_cmd;
+	ENDCHANNEL;
+
+	BLOCK logger;
+
+		SIGNALROUTE r
+			FROM ENV TO logger WITH log_cmd;
+
+		CONNECT c and r;
+
+		PROCESS logger REFERENCED;
+
+	ENDBLOCK;
+
+ENDSYSTEM;

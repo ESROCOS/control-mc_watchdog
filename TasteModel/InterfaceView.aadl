@@ -1,0 +1,337 @@
+---------------------------------------------------
+-- AADL2.1
+-- TASTE type interfaceview
+-- 
+-- generated code: do not edit
+---------------------------------------------------
+
+PACKAGE interfaceview::IV::JoystickDriver
+PUBLIC
+
+WITH interfaceview::IV::CmdDispatcher;
+WITH Taste;
+WITH DataView;
+WITH TASTE_IV_Properties;
+SUBPROGRAM PI_step
+PROPERTIES
+  Taste::Associated_Queue_Size => 1;
+END PI_step;
+
+SUBPROGRAM IMPLEMENTATION PI_step.others
+PROPERTIES
+  Compute_Execution_Time => 0 ms .. 10 ms;
+END PI_step.others;
+
+SUBPROGRAM RI_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+END RI_cmd;
+
+SUBPROGRAM IMPLEMENTATION RI_cmd.others
+END RI_cmd.others;
+
+SYSTEM JoystickDriver
+FEATURES
+  PI_step : PROVIDES SUBPROGRAM ACCESS interfaceview::IV::JoystickDriver::PI_step.others {
+    Taste::coordinates => "104094 64880";
+    Taste::RCMoperationKind => cyclic;
+    Taste::RCMperiod => 100 ms;
+    Taste::Deadline => 10 ms;
+    Taste::InterfaceName => "step";
+  };
+  RI_cmd : REQUIRES SUBPROGRAM ACCESS interfaceview::IV::CmdDispatcher::PI_cmd.others {
+    Taste::coordinates => "115273 73857";
+    Taste::RCMoperationKind => any;
+    Taste::InterfaceName => "cmd";
+    Taste::labelInheritance => "true";
+  };
+PROPERTIES
+  Source_Language => (SDL);
+  Taste::Active_Interfaces => any;
+END JoystickDriver;
+
+SYSTEM IMPLEMENTATION JoystickDriver.others
+END JoystickDriver.others;
+
+END interfaceview::IV::JoystickDriver;
+
+PACKAGE interfaceview::IV::CmdDispatcher
+PUBLIC
+
+WITH interfaceview::IV::Logger;
+WITH interfaceview::IV::Watchdog;
+WITH Taste;
+WITH DataView;
+WITH TASTE_IV_Properties;
+SUBPROGRAM PI_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+PROPERTIES
+  Taste::Associated_Queue_Size => 1;
+END PI_cmd;
+
+SUBPROGRAM IMPLEMENTATION PI_cmd.others
+PROPERTIES
+  Compute_Execution_Time => 0 ms .. 10 ms;
+END PI_cmd.others;
+
+SUBPROGRAM RI_log_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+END RI_log_cmd;
+
+SUBPROGRAM IMPLEMENTATION RI_log_cmd.others
+END RI_log_cmd.others;
+
+SUBPROGRAM RI_test_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+END RI_test_cmd;
+
+SUBPROGRAM IMPLEMENTATION RI_test_cmd.others
+END RI_test_cmd.others;
+
+SYSTEM CmdDispatcher
+FEATURES
+  PI_cmd : PROVIDES SUBPROGRAM ACCESS interfaceview::IV::CmdDispatcher::PI_cmd.others {
+    Taste::coordinates => "126296 73857";
+    Taste::RCMoperationKind => sporadic;
+    Taste::RCMperiod => 10 ms;
+    Taste::Deadline => 10 ms;
+    Taste::InterfaceName => "cmd";
+  };
+  RI_log_cmd : REQUIRES SUBPROGRAM ACCESS interfaceview::IV::Logger::PI_log_cmd.others {
+    Taste::coordinates => "147398 74173";
+    Taste::RCMoperationKind => any;
+    Taste::InterfaceName => "log_cmd";
+    Taste::labelInheritance => "true";
+  };
+  RI_test_cmd : REQUIRES SUBPROGRAM ACCESS interfaceview::IV::Watchdog::PI_test_cmd.others {
+    Taste::coordinates => "147398 67873";
+    Taste::RCMoperationKind => any;
+    Taste::InterfaceName => "test_cmd";
+    Taste::labelInheritance => "true";
+  };
+PROPERTIES
+  Source_Language => (SDL);
+  Taste::Active_Interfaces => any;
+END CmdDispatcher;
+
+SYSTEM IMPLEMENTATION CmdDispatcher.others
+END CmdDispatcher.others;
+
+END interfaceview::IV::CmdDispatcher;
+
+PACKAGE interfaceview::IV::Watchdog
+PUBLIC
+
+WITH interfaceview::IV::BLSClient;
+WITH Taste;
+WITH DataView;
+WITH TASTE_IV_Properties;
+SUBPROGRAM PI_test_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+PROPERTIES
+  Taste::Associated_Queue_Size => 1;
+END PI_test_cmd;
+
+SUBPROGRAM IMPLEMENTATION PI_test_cmd.others
+PROPERTIES
+  Compute_Execution_Time => 0 ms .. 10 ms;
+END PI_test_cmd.others;
+
+SUBPROGRAM RI_mot_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+END RI_mot_cmd;
+
+SUBPROGRAM IMPLEMENTATION RI_mot_cmd.others
+END RI_mot_cmd.others;
+
+SUBPROGRAM PI_purge
+END PI_purge;
+
+SUBPROGRAM IMPLEMENTATION PI_purge.others
+PROPERTIES
+  Compute_Execution_Time => 0 ms .. 10 ms;
+END PI_purge.others;
+
+SYSTEM Watchdog
+FEATURES
+  PI_test_cmd : PROVIDES SUBPROGRAM ACCESS interfaceview::IV::Watchdog::PI_test_cmd.others {
+    Taste::coordinates => "164248 65195";
+    Taste::RCMoperationKind => sporadic;
+    Taste::RCMperiod => 10 ms;
+    Taste::Deadline => 10 ms;
+    Taste::InterfaceName => "test_cmd";
+  };
+  RI_mot_cmd : REQUIRES SUBPROGRAM ACCESS interfaceview::IV::BLSClient::PI_mot_cmd.others {
+    Taste::coordinates => "184404 65196";
+    Taste::RCMoperationKind => any;
+    Taste::InterfaceName => "mot_cmd";
+    Taste::labelInheritance => "true";
+  };
+  PI_purge : PROVIDES SUBPROGRAM ACCESS interfaceview::IV::Watchdog::PI_purge.others {
+    Taste::coordinates => "173698 56534";
+    Taste::RCMoperationKind => cyclic;
+    Taste::RCMperiod => 80 ms;
+    Taste::Deadline => 10 ms;
+    Taste::InterfaceName => "purge";
+  };
+PROPERTIES
+  Source_Language => (CPP);
+  Taste::Active_Interfaces => any;
+END Watchdog;
+
+SYSTEM IMPLEMENTATION Watchdog.others
+END Watchdog.others;
+
+END interfaceview::IV::Watchdog;
+
+PACKAGE interfaceview::IV::Logger
+PUBLIC
+
+WITH Taste;
+WITH DataView;
+WITH TASTE_IV_Properties;
+SUBPROGRAM PI_log_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+PROPERTIES
+  Taste::Associated_Queue_Size => 1;
+END PI_log_cmd;
+
+SUBPROGRAM IMPLEMENTATION PI_log_cmd.others
+PROPERTIES
+  Compute_Execution_Time => 0 ms .. 10 ms;
+END PI_log_cmd.others;
+
+SYSTEM Logger
+FEATURES
+  PI_log_cmd : PROVIDES SUBPROGRAM ACCESS interfaceview::IV::Logger::PI_log_cmd.others {
+    Taste::coordinates => "165035 76219";
+    Taste::RCMoperationKind => sporadic;
+    Taste::RCMperiod => 10 ms;
+    Taste::Deadline => 10 ms;
+    Taste::InterfaceName => "log_cmd";
+  };
+PROPERTIES
+  Source_Language => (SDL);
+  Taste::Active_Interfaces => any;
+END Logger;
+
+SYSTEM IMPLEMENTATION Logger.others
+END Logger.others;
+
+END interfaceview::IV::Logger;
+
+PACKAGE interfaceview::IV::BLSClient
+PUBLIC
+
+WITH Taste;
+WITH DataView;
+WITH TASTE_IV_Properties;
+SUBPROGRAM PI_mot_cmd
+FEATURES
+  cmd_val : IN PARAMETER DataView::Base_commands_Motion2D {
+    Taste::encoding => NATIVE;
+  };
+PROPERTIES
+  Taste::Associated_Queue_Size => 1;
+END PI_mot_cmd;
+
+SUBPROGRAM IMPLEMENTATION PI_mot_cmd.others
+PROPERTIES
+  Compute_Execution_Time => 0 ms .. 10 ms;
+END PI_mot_cmd.others;
+
+SYSTEM BLSClient
+FEATURES
+  PI_mot_cmd : PROVIDES SUBPROGRAM ACCESS interfaceview::IV::BLSClient::PI_mot_cmd.others {
+    Taste::coordinates => "195585 65195";
+    Taste::RCMoperationKind => sporadic;
+    Taste::RCMperiod => 10 ms;
+    Taste::Deadline => 10 ms;
+    Taste::InterfaceName => "mot_cmd";
+  };
+PROPERTIES
+  Source_Language => (SDL);
+  Taste::Active_Interfaces => any;
+END BLSClient;
+
+SYSTEM IMPLEMENTATION BLSClient.others
+END BLSClient.others;
+
+END interfaceview::IV::BLSClient;
+
+PACKAGE interfaceview::IV
+PUBLIC
+
+WITH interfaceview::IV::JoystickDriver;
+WITH interfaceview::IV::CmdDispatcher;
+WITH interfaceview::IV::Watchdog;
+WITH interfaceview::IV::Logger;
+WITH interfaceview::IV::BLSClient;
+WITH Taste;
+WITH DataView;
+WITH TASTE_IV_Properties;
+SYSTEM interfaceview
+PROPERTIES
+  Taste::dataView => ("DataView");
+  Taste::dataViewPath => ("DataView.aadl");
+END interfaceview;
+
+SYSTEM IMPLEMENTATION interfaceview.others
+SUBCOMPONENTS
+  JoystickDriver : SYSTEM interfaceview::IV::JoystickDriver::JoystickDriver.others {
+    Taste::coordinates => "92754 64880 115273 77006";
+  };
+  CmdDispatcher : SYSTEM interfaceview::IV::CmdDispatcher::CmdDispatcher.others {
+    Taste::coordinates => "126296 64723 147398 76848";
+  };
+  Watchdog : SYSTEM interfaceview::IV::Watchdog::Watchdog.others {
+    Taste::coordinates => "164248 56534 184404 67085";
+  };
+  Logger : SYSTEM interfaceview::IV::Logger::Logger.others {
+    Taste::coordinates => "165035 73069 182672 83463";
+  };
+  BLSClient : SYSTEM interfaceview::IV::BLSClient::BLSClient.others {
+    Taste::coordinates => "195585 57322 211333 67243";
+  };
+CONNECTIONS
+  CmdDispatcher_PI_cmd_JoystickDriver_RI_cmd : SUBPROGRAM ACCESS CmdDispatcher.PI_cmd -> JoystickDriver.RI_cmd {
+    Taste::coordinates => "115273 73857 118501 73857 118501 73857 126296 73857";
+  };
+  Logger_PI_log_cmd_CmdDispatcher_RI_log_cmd : SUBPROGRAM ACCESS Logger.PI_log_cmd -> CmdDispatcher.RI_log_cmd {
+    Taste::coordinates => "147398 74173 156138 74173 156138 76219 165035 76219";
+  };
+  Watchdog_PI_test_cmd_CmdDispatcher_RI_test_cmd : SUBPROGRAM ACCESS Watchdog.PI_test_cmd -> CmdDispatcher.RI_test_cmd {
+    Taste::coordinates => "147398 67873 156138 67873 156138 65195 164248 65195";
+  };
+  BLSClient_PI_mot_cmd_Watchdog_RI_mot_cmd : SUBPROGRAM ACCESS BLSClient.PI_mot_cmd -> Watchdog.RI_mot_cmd {
+    Taste::coordinates => "184404 65196 189050 65196 189050 65195 195585 65195";
+  };
+END interfaceview.others;
+
+PROPERTIES
+  Taste::dataView => ("DataView");
+  Taste::dataViewPath => ("DataView.aadl");
+  Taste::coordinates => "0 0 297000 210000";
+  Taste::version => "2.0";
+END interfaceview::IV;
+

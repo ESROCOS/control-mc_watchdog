@@ -1,0 +1,14 @@
+#ifndef INCLUDE_INTERFACEVIEW_QPR____INTERFACEVIEW____PORTBASE__XCOMMANDS__XMOTION2D_HPP_
+#define INCLUDE_INTERFACEVIEW_QPR____INTERFACEVIEW____PORTBASE__XCOMMANDS__XMOTION2D_HPP_
+
+#include <QuotedPortReference.hpp>
+
+#include <InterfaceView/PT__InterfaceView__portBase_xcommands_xMotion2D.hpp>
+
+class QPR__InterfaceView__portBase_xcommands_xMotion2D : public QuotedPortReference {
+public:
+    QPR__InterfaceView__portBase_xcommands_xMotion2D(PT__InterfaceView__portBase_xcommands_xMotion2D &port, const bool &trigger);
+    virtual ~QPR__InterfaceView__portBase_xcommands_xMotion2D();
+}; 
+
+#endif // INCLUDE_INTERFACEVIEW_QPR____INTERFACEVIEW____PORTBASE__XCOMMANDS__XMOTION2D_HPP_

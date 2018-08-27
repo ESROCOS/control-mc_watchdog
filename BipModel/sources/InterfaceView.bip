@@ -1,0 +1,129 @@
+//-------------------------------------
+// TASTE to BIP model transformation 
+// UGA/Verimag and Ellidiss Technologies 
+// ESROCOS/ERGO projects - April 2018  - v.0.9
+//-------------------------------------
+
+@cpp(src="ext-cpp/ExternInterfaceViewFcns.cpp",include="ExternInterfaceViewFcns.hpp,ExternalPortCmdWdog.hpp")
+package InterfaceView
+
+  const data bool TRUE = true
+  const data bool FALSE = false
+
+  // Extern declarations
+  extern function bool is_debug()
+  extern function write(const bool)
+  extern function writeln(const bool)
+  extern function write(const int)
+  extern function writeln(const int)
+  extern function write(const float)
+  extern function writeln(const float)
+  extern function write(const string)
+  extern function writeln(const string)
+  extern function writelog(const string, const string, const string, const string)
+
+  extern data type asn1SccBase_Angle 
+  extern function const float get_rad(const asn1SccBase_Angle)
+  extern function set_rad(asn1SccBase_Angle, const float)
+  extern function writeln(const asn1SccBase_Angle)
+
+  extern data type asn1SccBase_commands_Motion2D
+  extern function const float get_translation(const asn1SccBase_commands_Motion2D)
+  extern function set_translation (asn1SccBase_commands_Motion2D, const float)
+  extern function const float get_rotation(const asn1SccBase_commands_Motion2D)
+  extern function set_rotation(asn1SccBase_commands_Motion2D, const float)
+  extern function const float get_heading(const asn1SccBase_commands_Motion2D)
+  extern function set_heading(asn1SccBase_commands_Motion2D, const float)
+  extern function writeln(const asn1SccBase_commands_Motion2D)
+
+  extern data type queueBase_commands_Motion2D
+  extern function int get_size(const queueBase_commands_Motion2D)
+  extern function push_back(queueBase_commands_Motion2D, asn1SccBase_commands_Motion2D, int)
+  extern function asn1SccBase_commands_Motion2D pop_front(queueBase_commands_Motion2D)
+ 
+  // FDIR configuration functions
+  extern function fdir_init_config()
+  extern function const float get_init_time()
+  extern function const float get_wdog_timeout()
+	extern function const float get_wdog_eps()
+
+  // BIP-FDIR wrappers for halt actions 
+	extern function wrap_mot_cmd(const asn1SccBase_commands_Motion2D)
+
+  // Port types
+  port type Port()
+
+  port type portBase_commands_Motion2D(asn1SccBase_commands_Motion2D v)
+
+
+  atom type Watchdog()
+    clock t unit millisecond
+    data float init_timeout
+    data float timeout_val
+    data float timeout_eps
+    data float timeout
+    data asn1SccBase_commands_Motion2D Watchdog_test_cmd_cmd_val
+    data asn1SccBase_commands_Motion2D Watchdog_mot_cmd_cmd_val
+
+    extern port portBase_commands_Motion2D Watchdog_test_cmd_in(Watchdog_test_cmd_cmd_val)  as "ExternalPortCmdWdog" error
+    export port Port Watchdog_test_cmd_return()
+    export port portBase_commands_Motion2D Watchdog_mot_cmd_out(Watchdog_mot_cmd_cmd_val)
+ 
+    port Port wdog_timeout()
+
+    place Wait, l1, l2, l3, l4, l5
+
+    initial to Wait
+      do { fdir_init_config(); 
+           init_timeout = get_init_time();
+           timeout_val = get_wdog_timeout();
+					 timeout_eps = get_wdog_eps();
+           t = 0;
+           timeout = init_timeout;
+           if (is_debug()) then writelog("INFO","Watchdog","Configuration done",""); fi
+         }
+
+    on Watchdog_test_cmd_in
+      from Wait to l1
+      do { if (is_debug()) then writelog("INFO","Watchdog","test_cmd received",""); fi}
+
+    internal
+      from l1 to l2
+      do { Watchdog_mot_cmd_cmd_val = Watchdog_test_cmd_cmd_val; }
+
+    on Watchdog_mot_cmd_out
+      from l2 to l3
+      do { t = 0; 
+           timeout = timeout_val + timeout_eps; 
+           wrap_mot_cmd(Watchdog_mot_cmd_cmd_val);
+         }
+
+    on Watchdog_test_cmd_return
+      from l3 to Wait
+
+    on wdog_timeout
+      from Wait to l4
+      provided ( t >= timeout) 
+
+    internal
+      from l4 to l5
+      do { set_translation(Watchdog_mot_cmd_cmd_val, 0.0); 
+           set_rotation(Watchdog_mot_cmd_cmd_val, 0.0);
+           set_heading(Watchdog_mot_cmd_cmd_val, 0.0);
+          }
+
+    on Watchdog_mot_cmd_out
+      from l5 to Wait
+      do { t = 0; 
+           timeout = timeout_val + timeout_eps;
+           wrap_mot_cmd(Watchdog_mot_cmd_cmd_val);
+           writelog("INFO","Watchdog", "[Watchdog] [test_cmd] Stop command","");
+         }
+  end
+
+
+  // Compound types
+  compound type Syst()
+    component Watchdog Watchdog()
+  end
+end
