@@ -48,7 +48,7 @@ unordered_map<string, double> fdirDict;
 
 void fdir_init_config(){
 	//cout<<"Reading file";
-  ifstream fin("../../../config.cfg");
+  ifstream fin("../../config.cfg");
   for (string line ; getline(fin, line); ) {
     istringstream ssin(line);
     string name, sep;
@@ -58,12 +58,6 @@ void fdir_init_config(){
     if (name != "" && name[0] != '#') 
       fdirDict[name] = val;
   }
-
-	/*
-  for (auto kv : fdirDict) {
-    std::cout << kv.first << " : " << kv.second << std::endl;
-  }
-	*/
 }
 
 const double get_init_time(){

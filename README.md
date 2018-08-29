@@ -3,18 +3,18 @@ This project contains the sources and dependencies for the Watchdog component fr
 
 The content is structured as follows.
 
-# Configuration file
+## Configuration file
 
 config.cfg is a configuration file for the Watchdog component.
 It contains the threshold value for the Watchdog timeout against which the scenario needs to be validated.
 
-# BipEngine
+## BipEngine
 
 The folder contains the reference engine for BIP real-time as library. 
 This folder is a dependency for the TasteModel.
 
 
-# BipModel 
+## BipModel 
 
 The folder contains the full BIP model of the planetary scenario. It consists of:
 
@@ -24,7 +24,7 @@ The folder contains the full BIP model of the planetary scenario. It consists of
 
 The include and lib folders are dependencies for the integration of the Watchdog in TasteModel.
 
-# TasteModel
+## TasteModel
 
 The folder contains the TASTE-SDL model used in for the design and analysis of the Watchdog.
 The obtained Watchdog (in C++) is integrated in this model - subfolder watchdog.
