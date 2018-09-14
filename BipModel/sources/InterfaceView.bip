@@ -4,7 +4,7 @@
 // ESROCOS/ERGO projects - April 2018  - v.0.9
 //-------------------------------------
 
-@cpp(src="ext-cpp/ExternInterfaceViewFcns.cpp",include="ExternInterfaceViewFcns.hpp,ExternalPortCmdWdog.hpp")
+@cpp(include="ExternInterfaceViewFcns.hpp,ExternalPortCmdWdog.hpp")
 package InterfaceView
 
   const data bool TRUE = true

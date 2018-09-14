@@ -1,7 +1,7 @@
 #ifndef INTERFACEVIEW_CT____INTERFACEVIEW____SYST_HPP_
 #define INTERFACEVIEW_CT____INTERFACEVIEW____SYST_HPP_
 
-// /home/taste/Documents/ESROCOS/Planetary/BipModel/sources/InterfaceView.bip:126:2
+// /home/taste/Documents/ESROCOS/control-mc_watchdog/BipModel/sources/InterfaceView.bip:126:2
 // include package "master" header
 #include <InterfaceView.hpp>
 

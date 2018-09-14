@@ -14,13 +14,13 @@ use adaasn1rtl;
 
 
 package cmddispatcher is
-    --  Provided interface "cmd"
-    procedure cmd(cmd_val: access asn1SccBase_commands_Motion2D);
-    pragma Export(C, cmd, "cmddispatcher_cmd");
-    --  Required interface "log_cmd"
-    procedure RIÜlog_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
-    pragma import(C, RIÜlog_cmd, "cmddispatcher_RI_log_cmd");
-    --  Required interface "test_cmd"
-    procedure RIÜtest_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
-    pragma import(C, RIÜtest_cmd, "cmddispatcher_RI_test_cmd");
+   --  Provided interface "cmd"
+   procedure cmd(cmd_val: access asn1SccBase_commands_Motion2D);
+   pragma Export(C, cmd, "cmddispatcher_PI_cmd");
+   --  Required interface "log_cmd"
+   procedure RIÜlog_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
+   pragma import(C, RIÜlog_cmd, "cmddispatcher_RI_log_cmd");
+   --  Required interface "test_cmd"
+   procedure RIÜtest_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
+   pragma import(C, RIÜtest_cmd, "cmddispatcher_RI_test_cmd");
 end cmddispatcher;

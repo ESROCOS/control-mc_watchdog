@@ -14,7 +14,7 @@ use adaasn1rtl;
 
 
 package logger is
-    --  Provided interface "log_cmd"
-    procedure log_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
-    pragma Export(C, log_cmd, "logger_log_cmd");
+   --  Provided interface "log_cmd"
+   procedure log_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
+   pragma Export(C, log_cmd, "logger_PI_log_cmd");
 end logger;

@@ -14,7 +14,7 @@ use adaasn1rtl;
 
 
 package blsclient is
-    --  Provided interface "mot_cmd"
-    procedure mot_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
-    pragma Export(C, mot_cmd, "blsclient_mot_cmd");
+   --  Provided interface "mot_cmd"
+   procedure mot_cmd(cmd_val: access asn1SccBase_commands_Motion2D);
+   pragma Export(C, mot_cmd, "blsclient_PI_mot_cmd");
 end blsclient;

@@ -14,10 +14,10 @@ use adaasn1rtl;
 
 
 package joystickdriver is
-    --  Provided interface "step"
-    procedure step;
-    pragma Export(C, step, "joystickdriver_step");
-    --  Required interface "cmd"
-    procedure RIÜcmd(cmd_val: access asn1SccBase_commands_Motion2D);
-    pragma import(C, RIÜcmd, "joystickdriver_RI_cmd");
+   --  Provided interface "step"
+   procedure step;
+   pragma Export(C, step, "joystickdriver_PI_step");
+   --  Required interface "cmd"
+   procedure RIÜcmd(cmd_val: access asn1SccBase_commands_Motion2D);
+   pragma import(C, RIÜcmd, "joystickdriver_RI_cmd");
 end joystickdriver;

@@ -1,7 +1,7 @@
 #ifndef INTERFACEVIEW_PT____INTERFACEVIEW____PORTBASE__XCOMMANDS__XMOTION2D_HPP_
 #define INTERFACEVIEW_PT____INTERFACEVIEW____PORTBASE__XCOMMANDS__XMOTION2D_HPP_
 
-// /home/taste/Documents/ESROCOS/Planetary/BipModel/sources/InterfaceView.bip:56:2
+// /home/taste/Documents/ESROCOS/control-mc_watchdog/BipModel/sources/InterfaceView.bip:56:2
 // include package "master" header
 #include <InterfaceView.hpp>
 
