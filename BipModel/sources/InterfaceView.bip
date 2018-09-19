@@ -65,7 +65,7 @@ package InterfaceView
     data asn1SccBase_commands_Motion2D Watchdog_test_cmd_cmd_val
     data asn1SccBase_commands_Motion2D Watchdog_mot_cmd_cmd_val
 
-    extern port portBase_commands_Motion2D Watchdog_test_cmd_in(Watchdog_test_cmd_cmd_val)  as "ExternalPortCmdWdog" error
+    extern port portBase_commands_Motion2D Watchdog_test_cmd_in(Watchdog_test_cmd_cmd_val)  as "ExternalPortCmdWdog" remember
     export port Port Watchdog_test_cmd_return()
     export port portBase_commands_Motion2D Watchdog_mot_cmd_out(Watchdog_mot_cmd_cmd_val)
  

@@ -52,11 +52,14 @@
 
 using namespace std;
 
+#define PORT_BUFFER_SIZE 10
+
 class ExternalPortCmdWdog : public AtomExternalPort {
  public:
   ExternalPortCmdWdog(const string &name, const EventConsumptionPolicy &policy) :
     AtomExternalPort(name, policy),
-    isEvent(false) {
+    readIndex(0),
+		writeIndex(0) {
   }
 
   virtual ~ExternalPortCmdWdog() {
@@ -67,76 +70,51 @@ class ExternalPortCmdWdog : public AtomExternalPort {
 
   virtual bool hasEvent() const {
     mtx.lock();
-
-    bool r = isEvent;
-
+    bool r = (readIndex != writeIndex);
     mtx.unlock();
-
     return r;
   }
 
   virtual void popEvent() { 
     mtx.lock();
-
-    assert(isEvent);
-
-    isEvent = false;
-
-    mtx.unlock();
+		readIndex = (readIndex + 1) % PORT_BUFFER_SIZE;
+		mtx.unlock();
 	}
 
   virtual void purgeEvents() { 
     mtx.lock();
-
-    assert(isEvent);
-
-    isEvent = false;
-
-    mtx.unlock();
+		readIndex = writeIndex;
+		mtx.unlock();
 	}
 
   virtual TimeValue eventTime() const {
     mtx.lock();
-
-    assert(isEvent);
-
-    TimeValue r = t;
-
+    TimeValue r = t[readIndex];
     mtx.unlock();
-
     return r;
   }
 
   virtual asn1SccBase_commands_Motion2D& event_get_v() {
     mtx.lock();
-
-    assert(isEvent);
-
-    asn1SccBase_commands_Motion2D &r = val;
-
+    asn1SccBase_commands_Motion2D &r = val[readIndex];
     mtx.unlock();
-
     return r;
   }
 
   void push(const asn1SccBase_commands_Motion2D &v) {
     mtx.lock();
-
-    assert(!isEvent);
-
-    isEvent = true;
-    val = v;
-    t = time();
-
+    val[writeIndex] = v;
+    t[writeIndex] = time();
+		writeIndex = (writeIndex + 1) % PORT_BUFFER_SIZE;
     notify();
-
     mtx.unlock();
   }
 
-	protected:
-		asn1SccBase_commands_Motion2D val;
-		TimeValue t;
-		bool isEvent;
+  protected:
+		asn1SccBase_commands_Motion2D val[PORT_BUFFER_SIZE];
+		TimeValue t[PORT_BUFFER_SIZE];
+		int readIndex;
+		int writeIndex;
 
 		mutable mutex mtx;
 
